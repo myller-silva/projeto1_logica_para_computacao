@@ -9,7 +9,7 @@ def formula_sem_parenteses(formula):
       new_s += c 
   return new_s
 
-def get_columns(dataframe=pd.DataFrame()):
+def get_columns_names(dataframe=pd.DataFrame()):
   return dataframe.columns.to_list()
 
 
@@ -53,7 +53,7 @@ def restricao_dois(dataframe = pd.DataFrame(), n=3, m=4):
   # AndZao(1 a m)
   # OrZao (1 a n) variando a coluna
 
-  columns =  get_columns(dataframe)
+  columns =  get_columns_names(dataframe)
   n = len(columns)-1
   and_list = []
   for i in range(0, m):
@@ -67,12 +67,13 @@ def restricao_dois(dataframe = pd.DataFrame(), n=3, m=4):
 def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # quase ok
   # Para cada paciente sem patologia e cada regra, algum atributo do paciente n˜ao pode ser aplicado à regra.
   data_array = dataframe.values.tolist()
-  
-  columns =  get_columns(dataframe)
+  columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
   and_list = []
+
+  n = len(data_array)
   
-  for j in range(0, len(data_array)):
+  for j in range(0, n):
     if(data_array[j][-1]==0):
       for i in range(0, m_regras):
         or_list = []
@@ -84,6 +85,29 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # quase ok
         and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
 
+
+#pedir ajuda na restricao 4
+def restricao_quatro(dataframe= pd.DataFrame(), m_regras=4):
+  # Para cada paciente com patologia, cada regra e cada atributo, 
+  # se o atributo do paciente não se aplicar ao da regra, 
+  # então a regra não cobre esse paciente.
+  data_array = dataframe.values.tolist()
+  columns =  get_columns_names(dataframe)
+  n_atributos = len(columns)-1
+  and_list = []
+
+  # n = len(data_array)
+
+  for j in range(0, n_atributos):
+    if(data_array[j][-1]==1):
+      for i in range(0, m_regras):
+        for a in columns:
+
+
+
+
+
+  
 
 
 # file_name = f'column_bin_{3}a_{4}p.csv'
@@ -100,4 +124,4 @@ restricao2 = restricao_dois(df)
 p_diagnostico = df['P'].values.tolist()
 
 
-print(  formula_sem_parenteses(restricao_tres(df).right) )
+print(  ( restricao_tres(df) ) )
