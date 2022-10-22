@@ -1,0 +1,10 @@
+Use variaveis atomicas 
+Xa,i,le, Xa,i,gt, Xa,i,s e Ci,j 
+tal que 'a' é um atributo,
+'i' é um natural com 1 ≤ i ≤ m representando a i-ésima regra 
+e 'j' é um natural com 1 ≤ j ≤ n 
+em que n é a quantidade de pacientes. 
+
+Por exemplo, xGS≤37.89,2,le, xGS≤37.89,2,gt, xGS≤37.89,3,s, xP I≤42.09,3,gt,
+xP I≤70.62,1,le, c1,20 e c3,11 
+s˜ao exemplos de atˆomicas para o parˆametro m = 3
