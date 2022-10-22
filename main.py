@@ -1,5 +1,14 @@
 import pandas as pd 
-from LogiComp.formula import Atom, Implies, Or, And
+from LogiComp.formula import Atom, Or, And
+
+
+def show_data_list(data_list=[[], []]):
+  for l in data_list:
+    for c in l:
+      print(c, end=' ')
+    print()
+
+
 
 def list_to_form(or_list = [], Inner=Atom, Form=And):
   n = len(or_list)
@@ -13,7 +22,7 @@ def list_to_form(or_list = [], Inner=Atom, Form=And):
   return formula
 
 
-def quinta_restricao(data_frame = pd.DataFrame() , n=3, m=4): 
+def quinta_restricao(data_list = [], n=3, m=4): 
   # AndZao(1 a n ) OrZao(1 a m) C(i,j)
   # Cada paciente com patologia deve ser coberto por alguma das regras.
   # m é o numero de regras que estamos verificando se é possivel obter para classificar corretamente todos os pacientes
@@ -28,7 +37,7 @@ def quinta_restricao(data_frame = pd.DataFrame() , n=3, m=4):
   return list_to_form(and_list, Atom, And)
  
 
-def restricao_dois(data_frame = pd.DataFrame(), n=3, m=4):
+def restricao_dois(data_list = [], n=3, m=4):
   and_list = list()
   # AndZao(1 a m )
   # OrZao
@@ -36,18 +45,12 @@ def restricao_dois(data_frame = pd.DataFrame(), n=3, m=4):
   return
 
 
-
-
 # file_name = 'column_bin_3a_2p.csv'
-# data = pd.read_csv(f'./arquivo_dos_pacientes/{file_name}')
-# print(data)
+# dir = f'./arquivo_dos_pacientes/{file_name}'
+# df = pd.read_csv(dir) 
 
-# print("quinta restricao: ")
-# and_list = quinta_restricao(data) 
 
-# print('\n\n\n')
-# print( pd.DataFrame(and_list) ) 
+df = pd.read_csv('./exemplo_dado_no_pdf.csv')
+data_list = df.values.tolist()
 
-data = pd.read_csv('./exemplo_dado_no_pdf.csv')
-print(data)
-
+# print(df)
