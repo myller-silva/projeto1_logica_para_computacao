@@ -18,14 +18,14 @@ def quinta_restricao(data_frame = pd.DataFrame() , n=3, m=4):
   # Cada paciente com patologia deve ser coberto por alguma das regras.
   # m é o numero de regras que estamos verificando se é possivel obter para classificar corretamente todos os pacientes
   # n é o numero de pacientes
-  #  
+
   and_list = list()
   for i in range(0, n):
     or_list = list()
     for j in range(0, m): 
       or_list.append(f'C{i+1},{j+1}')
     and_list.append( list_to_form(or_list, Atom, Or) )
-  return and_list
+  return list_to_form(and_list, Atom, And)
  
 
 def restricao_dois(data_frame = pd.DataFrame(), n=3, m=4):
@@ -51,4 +51,3 @@ def restricao_dois(data_frame = pd.DataFrame(), n=3, m=4):
 data = pd.read_csv('./exemplo_dado_no_pdf.csv')
 print(data)
 
-quinta_restricao(data)
