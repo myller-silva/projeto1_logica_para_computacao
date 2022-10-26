@@ -1,4 +1,5 @@
 import pandas as pd 
+from my_funcions.list_manipulation import list_to_form
 from LogiComp.formula import Atom, Implies, Not, Or, And
 
 
@@ -27,16 +28,8 @@ def show_data_list(data_list=[[], []]):
 
 
 
-def list_to_form(or_list = [], Form=And):
-  n = len(or_list)
 
-  if(n==0):
-    raise OverflowError('Lista vazia')
-  
-  formula = or_list[0]
-  for i in range(1, n):
-    formula = Form(formula, or_list[i] )
-  return formula
+ 
 
 
 

@@ -1,6 +1,6 @@
 venv
 .replit
-testando.py
+temp.py
 __pycache__
 LogiComp/__pycache__
 replit.nix
