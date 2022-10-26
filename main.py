@@ -12,5 +12,17 @@ print(df)
 p_diagnostico = df['P'].values.tolist()
 
 
-print(  restricao_quatro(df) )
 
+print("-"*30)
+print("restricao 1:")
+print( restricao_um(df))
+
+
+
+print("-"*30)
+print("restricao 2:")
+print( restricao_dois(df))
+
+print("-"*30)
+print("restricao 3:")
+print( restricao_tres(df) )
