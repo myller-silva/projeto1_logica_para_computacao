@@ -9,6 +9,12 @@ As another example, the piece of code below creates an object that represents (p
 formula2 = Implies(Atom('p'), Or(Atom('p'), Atom('s')))
 """
 
+simbolo = {
+    'not': u"\u00ac",
+    'and': u"\u2227",
+    'or': u"\u2228",
+    'implies': u"\u2192" 
+}
 
 class Formula:
     def __init__(self):
@@ -58,7 +64,10 @@ class Not(Formula):
         self.inner = inner
 
     def __str__(self):
-        return "(" + u"\u00ac" + str(self.inner) + ")"
+        if( isinstance(self.inner, Atom) ):
+            return u"\u00ac" + self.inner.__str__()
+        else:
+            return  u"\u00ac" +"(" + self.inner.__str__() + ")"
     
     def __eq__(self, other):
         return isinstance(other, Not) and other.inner == self.inner
@@ -72,10 +81,24 @@ class And(Formula):
     def __init__(self, left, right):
         super().__init__()
         self.left = left
+        
         self.right = right
+        
+        
+    # def str_line(self, quebrar_linha=True):
+    #     temp =  "\n" if(quebrar_linha==True) else ""
+    #     return f'{temp}{self.left.str_line(True)} {simbolo["and"]} {self.right.str_line(True)} {temp}'
+
 
     def __str__(self):
-        return "(" + self.left.__str__() + " " + u"\u2227" + " " + self.right.__str__() + ")"
+
+        l = self.left.__str__()
+        if((not isinstance(self.left, And)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
+            l = f'({l})'
+        r = self.right.__str__()
+        if((not isinstance(self.right, And)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
+            r = f'({r})' 
+        return f'{l} {simbolo["and"]} {r}'
 
     def __eq__(self, other):
         return isinstance(other, And) and other.left == self.left and other.right == self.right
@@ -90,9 +113,18 @@ class Or(Formula):
         super().__init__()
         self.left = left
         self.right = right
+    
+    # def str_line(self, quebrar_linha=True):
+    #     return self.__str__()
 
     def __str__(self):
-        return "(" + self.left.__str__() + " " + u"\u2228" + " " + self.right.__str__() + ")"
+        l = self.left.__str__()
+        if((not isinstance(self.left, Or)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
+            l = f'({l})'
+        r = self.right.__str__()
+        if((not isinstance(self.right, Or)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
+            r = f'({r})'
+        return f'{l} {simbolo["or"]} {r}'
 
     def __eq__(self, other):
         return isinstance(other, Or) and other.left == self.left and other.right == self.right
