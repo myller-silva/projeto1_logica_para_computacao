@@ -90,6 +90,7 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # quase ok
   columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
   and_list = []
+  possible = ['le', 'gt', 's ']
 
   n = len(data_array)
   
@@ -99,9 +100,9 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # quase ok
         or_list = []
         for a in range(0, n_atributos):
           if(data_array[j][a]==1):
-            or_list.append( Atom( f'X{columns[a]},{i+1},gt') )
+            or_list.append( Atom( f'X{columns[a]},{i+1},{possible[1]}') )
           else:
-            or_list.append( Atom( f'X{columns[a]},{i+1},le') )
+            or_list.append( Atom( f'X{columns[a]},{i+1},{possible[0]}') )
         and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
 
