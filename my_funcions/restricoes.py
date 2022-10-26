@@ -27,7 +27,36 @@ def show_data_list(data_list=[[], []]):
 
 
 
+def restricao_um(dataframe = pd.DataFrame(), n=3, m=4): #talvez ok
+  #Para cada atributo e cada regra, temos exatamente uma das três possibilidades: 
+  # o atributo aparece
+  # com ≤ na regra, 
+  # o atributo aparece com > na regra, 
+  # ou o atributo não aparece na regra.
 
+  possible = ['le', 'gt', 's ']
+  len_possible = len(possible)
+  columns = get_columns_names(dataframe) 
+  len_columns = len(columns)
+  and_list = []
+
+  for i in range(0, m):
+    or_list = []
+    for a in range(0, len_columns-1):
+      for c in range(0, len_possible):
+        or_list.append(
+          And(
+            Atom(f'X{columns[a]},{i+1},{possible[ c % len_possible ]}'), 
+            Not(
+              Or(
+                Atom(f'X{columns[a]},{i+1},{possible[ (c+1) % len_possible ]}'), 
+                Atom(f'X{columns[a]},{i+1},{possible[ (c+2) % len_possible ]}')
+              )
+            )
+          ) 
+        ) 
+    and_list.append( list_to_form(or_list, Or) ) 
+  return list_to_form(and_list, And)
 
  
 
