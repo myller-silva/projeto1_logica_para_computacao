@@ -1,2 +1,4 @@
 venv
 .replit
+testando.py
+__pycache__
