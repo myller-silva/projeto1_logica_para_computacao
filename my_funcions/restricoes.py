@@ -69,14 +69,15 @@ def restricao_dois(dataframe = pd.DataFrame(), n=3, m=4):
   # Cada regra deve ter algum atributo aparecendo nela.
   # AndZao(1 a m)
   # OrZao (1 a n) variando a coluna
-
+  
+  possible = ['le', 'gt', 's ']
   columns =  get_columns_names(dataframe)
   n = len(columns)-1
   and_list = []
   for i in range(0, m):
     or_list = []
     for j in range(0, n):
-      or_list.append( Not(Atom( f'X{columns[j]},{i+1},s' )) )
+      or_list.append( Not(Atom( f'X{columns[j]},{i+1},{possible[2]}' )) )
     and_list.append(list_to_form(or_list, Or))
   return list_to_form(and_list, And)
 
