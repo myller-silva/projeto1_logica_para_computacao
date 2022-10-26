@@ -2,3 +2,4 @@ venv
 .replit
 testando.py
 __pycache__
+LogiComp/__pycache__
