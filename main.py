@@ -1,5 +1,6 @@
 import pandas as pd 
 from LogiComp.formula import Atom, Implies, Not, Or, And
+from LogiComp.functions import atoms
 
 from my_functions.restricoes import *
 
@@ -29,12 +30,29 @@ def truth_value(formula=Atom(''), interpretation={}):
   raise TypeError('Formula ou interpretacao invalida')
 
 
+def satisfiablity_checkin(formula):
+  list_atoms = atoms(formula)
+  interpretation = []
+  return sat(formula, list_atoms, interpretation)
+
+def sat(formula, list_atoms, interpretation):
+  pass
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 df = pd.read_csv('./exemplo_dado_no_pdf.csv')
-
 # print(df)
-
 # p_diagnostico = df['P'].values.tolist()
 
 print("-"*30)
