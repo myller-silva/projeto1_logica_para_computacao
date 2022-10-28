@@ -114,6 +114,9 @@ class Or(Formula):
         super().__init__()
         self.left = left
         self.right = right
+    
+    # def str_line(self, quebrar_linha=True):
+    #     return self.__str__()
 
     def __str__(self):
         l = self.left.__str__()
