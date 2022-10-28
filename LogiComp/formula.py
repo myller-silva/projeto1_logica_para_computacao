@@ -92,10 +92,12 @@ class And(Formula):
     def __str__(self):
 
         l = self.left.__str__()
-        if((not isinstance(self.left, And)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
+        if((isinstance(self.left, Or)) or (isinstance(self.left, Implies) )  ):
+        # if((not isinstance(self.left, And)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
             l = f'({l})'
         r = self.right.__str__()
-        if((not isinstance(self.right, And)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
+        if((isinstance(self.right, Or)) or (isinstance(self.right, Implies) )  ):
+        # if((not isinstance(self.right, And)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
             r = f'({r})' 
         return f'{l} {simbolo["and"]} {r}'
 
@@ -112,16 +114,15 @@ class Or(Formula):
         super().__init__()
         self.left = left
         self.right = right
-    
-    # def str_line(self, quebrar_linha=True):
-    #     return self.__str__()
 
     def __str__(self):
         l = self.left.__str__()
-        if((not isinstance(self.left, Or)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
+        if((isinstance(self.left, And)) or (isinstance(self.left, Implies) )  ):
+        # if((not isinstance(self.left, Or)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
             l = f'({l})'
         r = self.right.__str__()
-        if((not isinstance(self.right, Or)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
+        if((isinstance(self.right, And)) or (isinstance(self.right, Implies) )  ):
+        # if((not isinstance(self.right, Or)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
             r = f'({r})'
         return f'{l} {simbolo["or"]} {r}'
         # return f'({self.left.__str__()} {simbolo["or"]} {self.right.__str__()})'
