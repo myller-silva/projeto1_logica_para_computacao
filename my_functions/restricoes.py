@@ -27,7 +27,7 @@ def show_data_list(data_list=[[], []]):
 
 
 
-def restricao_um(dataframe = pd.DataFrame(), n=3, m_regras=4): #talvez ok
+def restricao_um(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
   #Para cada atributo e cada regra, temos exatamente uma das três possibilidades: 
   # o atributo aparece
   # com ≤ na regra, 
@@ -61,7 +61,7 @@ def restricao_um(dataframe = pd.DataFrame(), n=3, m_regras=4): #talvez ok
 
 
 
-def restricao_dois(dataframe = pd.DataFrame(), n=3, m_regras=4):
+def restricao_dois(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
   # Cada regra deve ter algum atributo aparecendo nela.
   # AndZao(1 a m)
   # OrZao (1 a n) variando a coluna
@@ -80,7 +80,7 @@ def restricao_dois(dataframe = pd.DataFrame(), n=3, m_regras=4):
 
 
 
-def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # quase ok
+def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # ok
   # Para cada paciente sem patologia e cada regra, algum atributo do paciente n˜ao pode ser aplicado à regra.
   data_array = dataframe.values.tolist()
   columns =  get_columns_names(dataframe)
