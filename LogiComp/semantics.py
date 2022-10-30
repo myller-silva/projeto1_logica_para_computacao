@@ -61,8 +61,33 @@ def is_valid(formula):
 def satisfiability_brute_force(formula):
     """Checks whether formula is satisfiable.
     In other words, if the input formula is satisfiable, it returns an interpretation that assigns true to the formula.
-    Otherwise, it returns False."""
-    pass
-    # ======== YOUR CODE HERE ========
+    Otherwise, it returns False.""" 
+    list_atoms = atoms(formula)
+    interpretation = {}
+    return sat(formula, list_atoms, interpretation)
 
 
+def sat(formula=Atom('p'), list_atoms=['p'], interpretation=dict(), pointer = 0 ): 
+    # print(f'{formula} {list_atoms} {interpretation}')
+    if( len(list_atoms) == pointer ):
+        temp = truth_value(formula, interpretation)
+        if(temp != False): 
+            return interpretation 
+        else: 
+            return False 
+    
+    atom = list_atoms[pointer]  
+
+    interpretation1 = interpretation.copy()
+    interpretation1[atom] = True
+    r = sat(formula, list_atoms, interpretation1, pointer+1)
+    if(r!=False): 
+        return r
+
+    interpretation2 = interpretation.copy() 
+    interpretation2[atom] = False
+    r = sat(formula, list_atoms, interpretation2, pointer+1)
+    if(r!=False): 
+        return r
+    
+    return False
