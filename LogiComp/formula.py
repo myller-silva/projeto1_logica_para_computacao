@@ -87,19 +87,21 @@ class And(Formula):
     # def str_line(self, quebrar_linha=True):
     #     temp =  "\n" if(quebrar_linha==True) else ""
     #     return f'{temp}{self.left.str_line(True)} {simbolo["and"]} {self.right.str_line(True)} {temp}'
-
+    def __str__(self):
+        return f'({self.left.__str__() } {simbolo["and"]} {self.right.__str__()})'
 
     def __str__(self):
 
         l = self.left.__str__()
         if((isinstance(self.left, Or)) or (isinstance(self.left, Implies) )  ):
-        # if((not isinstance(self.left, And)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
+        # # if((not isinstance(self.left, And)) and (not isinstance(self.left, Atom) ) and (not isinstance(self.left, Not) ) ):
             l = f'({l})'
         r = self.right.__str__()
         if((isinstance(self.right, Or)) or (isinstance(self.right, Implies) )  ):
-        # if((not isinstance(self.right, And)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
+        # # if((not isinstance(self.right, And)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
             r = f'({r})' 
         return f'{l} {simbolo["and"]} {r}'
+
 
     def __eq__(self, other):
         return isinstance(other, And) and other.left == self.left and other.right == self.right
@@ -113,10 +115,10 @@ class Or(Formula):
     def __init__(self, left, right):
         super().__init__()
         self.left = left
-        self.right = right
-    
-    # def str_line(self, quebrar_linha=True):
-    #     return self.__str__()
+        self.right = right 
+        
+    # def __str__(self): 
+    #     return f'({self.left.__str__() } {simbolo["or"]} {self.right.__str__() })'
 
     def __str__(self):
         l = self.left.__str__()
@@ -127,9 +129,7 @@ class Or(Formula):
         if((isinstance(self.right, And)) or (isinstance(self.right, Implies) )  ):
         # if((not isinstance(self.right, Or)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
             r = f'({r})'
-        return f'{l} {simbolo["or"]} {r}'
-        # return f'({self.left.__str__()} {simbolo["or"]} {self.right.__str__()})'
-        
+        return f'{l} {simbolo["or"]} {r}' 
 
     def __eq__(self, other):
         return isinstance(other, Or) and other.left == self.left and other.right == self.right

@@ -1,5 +1,5 @@
 import pandas as pd 
-from LogiComp.formula import Atom, Implies, Not, Or, And
+from LogiComp.formula import *
 from LogiComp.functions import atoms
 
 from my_functions.restricoes import *
@@ -82,3 +82,18 @@ print( restricao_tres(df) )
 print("-"*30)
 print("restricao 5:")
 print( restricao_cinco(df) )
+
+p, q = Atom('p'), Atom('q')
+form = And(
+  And(p, q),
+  Not(
+    And(
+      Not(p),
+      q
+    )
+  )
+)
+
+
+
+print(form)
