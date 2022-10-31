@@ -17,6 +17,9 @@ def formula_sem_parenteses(formula):
 def get_columns_names(dataframe=pd.DataFrame()):
   return dataframe.columns.to_list()
 
+#implementar 
+def len_pacientes(dataframe = pd.DataFrame()):
+  return 3
 
 
 def show_data_list(data_list=[[], []]):
@@ -80,7 +83,7 @@ def restricao_dois(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
 
 
 
-def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # ok
+def restricao_tres(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
   # Para cada paciente sem patologia e cada regra, algum atributo do paciente n˜ao pode ser aplicado à regra.
   data_array = dataframe.values.tolist()
   columns =  get_columns_names(dataframe)
@@ -104,6 +107,9 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # ok
 
 
 
+def get_atributos(dataframe = pd.DataFrame()):
+  columns_names = get_columns_names(dataframe) 
+  return columns_names[0:-1]
 
 
 
@@ -111,9 +117,10 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # ok
 def restricao_quatro(dataframe = pd.DataFrame(), n=3, m_regras=4):
 
   and_list = []
-  columns_names = get_columns_names(dataframe)
-  atributos = columns_names[0:len(columns_names)-1]
-  
+  # columns_names = get_columns_names(dataframe)
+  # atributos = columns_names[0:-1]
+  atributos = get_atributos(dataframe)
+
   for i in range(m_regras):
     for j in range(n):
       for a in atributos:
@@ -125,7 +132,7 @@ def restricao_quatro(dataframe = pd.DataFrame(), n=3, m_regras=4):
             )
           )
         )
-                
+
   return list_to_form(and_list, And)
 
 
