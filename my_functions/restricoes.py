@@ -105,27 +105,31 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=4): # ok
 
 
 
-# pedir ajuda ao professor
-def restricao_quatro(dataframe= pd.DataFrame(), m_regras=4):
-  # Para cada paciente com patologia, cada regra e cada atributo, 
-  # se o atributo do paciente não se aplicar ao da regra, 
-  # então a regra não cobre esse paciente.
-  data_array = dataframe.values.tolist()
-  columns =  get_columns_names(dataframe)
-  n_atributos = len(columns)-1
+
+
+#ok
+def restricao_quatro(dataframe = pd.DataFrame(), n=3, m_regras=4):
+
   and_list = []
+  columns_names = get_columns_names(dataframe)
+  atributos = columns_names[0:len(columns_names)-1]
+  
+  for i in range(m_regras):
+    for j in range(n):
+      for a in atributos:
+        and_list.append(
+          Implies(
+            Atom(f'X{a},{i+1},{"le"}'),
+            Not(
+              Atom(f'C{i+1},{j+1}')
+            )
+          )
+        )
+                
+  return list_to_form(and_list, And)
 
-  # n = len(data_array)
 
-  for j in range(0, n_atributos):
-    if(data_array[j][-1]==1):
-      for i in range(0, m_regras):
-        for a in columns:
-          pass
-
-
-
-# pedir ajuda ao professor
+#ok
 def restricao_cinco(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
   # AndZao(1 a n ) OrZao(1 a m) C(i,j)
   # Cada paciente com patologia deve ser coberto por alguma das regras.
@@ -133,10 +137,10 @@ def restricao_cinco(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
   # n é o numero de pacientes
 
   and_list = []
-  for i in range(0, n):
+  for j in range(n):
     or_list = []
-    for j in range(0, m_regras): 
-      or_list.append( Atom( f'C{i+1},{j+1}' ) )
-    and_list.append( list_to_form(or_list, Or) )
+    for i in range(m_regras):
+      or_list.append(Atom(f'C{i+1},{j+1}'))
+    and_list.append(list_to_form(or_list, Or)) 
   return list_to_form( and_list, And )
- 
+  
