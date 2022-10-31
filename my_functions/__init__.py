@@ -51,3 +51,26 @@ def duplo_satisfativel(formula):
   else:
     return False
 
+
+def sat_cheking(set_of_formulas=[]):
+  formula = list_to_form(set_of_formulas, And)
+  return my_satisfiability(formula) 
+
+
+
+#incompleto
+def all_models(formula, interpretation):
+  if(truth_value(formula, interpretation)!=False):
+    return [interpretation.copy()]
+
+  keys = list(interpretation.keys()) 
+  set_interpretation = []
+  for key in keys:
+    if(interpretation[key]==False):
+      interpretation[key] = True
+      if(truth_value(formula, interpretation)):
+        set_interpretation.append(interpretation.copy())
+      interpretation[key] = False
+
+
+
