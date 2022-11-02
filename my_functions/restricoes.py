@@ -70,46 +70,40 @@ def restricao_um(dataframe = pd.DataFrame(), m_regras=2):
   return list_to_form(and_list, And) 
 
 
-
+#ok
 def restricao_dois(dataframe = pd.DataFrame(), m_regras=2): # ok
   # Cada regra deve ter algum atributo aparecendo nela.
   # AndZao(1 a m)
-  # OrZao (1 a n) variando a coluna
-  
-  possible = [LE, GT, S]
+  # OrZao (1 a n) variando a coluna 
   columns =  get_columns_names(dataframe)
   n = len(columns)-1
   and_list = []
   for i in range(0, m_regras):
     or_list = []
     for j in range(0, n):
-      or_list.append( Not(Atom( f'X{columns[j]},{i+1},{possible[2]}' )) )
+      or_list.append( Not(Atom( f'X{columns[j]},{i+1},{S}' )) )
     and_list.append(list_to_form(or_list, Or))
   return list_to_form(and_list, And)
 
 
-
-
+#ok
 def restricao_tres(dataframe = pd.DataFrame(), m_regras=2):
   data_array = dataframe.values.tolist()
   columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
-  and_list = []
-  possible = [LE, GT, S]
+  and_list = [] 
 
-  n = len(data_array)
-  n2 = number_of_patients(dataframe) 
-  
-  
+  n = number_of_patients(dataframe)   
+
   for j in range(0, n):
     if(data_array[j][-1]==0):
       for i in range(0, m_regras):
         or_list = []
         for a in range(0, n_atributos):
           if(data_array[j][a]==1):
-            or_list.append( Atom( f'X{columns[a]},{i+1},{possible[1]}') )
-          else:
-            or_list.append( Atom( f'X{columns[a]},{i+1},{possible[0]}') )
+            or_list.append( Atom( f'X{columns[a]},{i+1},{GT}') )
+          elif(data_array[j][a]==0):
+            or_list.append( Atom( f'X{columns[a]},{i+1},{LE}') )
         and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
 
@@ -122,25 +116,30 @@ def get_atributos(dataframe = pd.DataFrame()):
 
 
 
-
+# erro corrigido
+# erro
 def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
   and_list = [] 
   atributos = get_atributos(dataframe)
   
   data_array = dataframe.values.tolist()
   n = len(data_array)
+  # print(dataframe)
+  # print(data_array)
 
   for i in range(m_regras):
     for j in range(n):
-      for a in atributos:
-        and_list.append(
-          Implies(
-            Atom(f'X{a},{i+1},{LE}'),
-            Not(
-              Atom(f'C{i+1},{j+1}')
+      tem_patologia = data_array[j][-1] == 1 
+      if(tem_patologia):
+        for a in atributos:
+          and_list.append(
+            Implies(
+              Atom(f'X{a},{i+1},{LE}'),
+              Not(
+                Atom(f'C{i+1},{j+1}')
+              )
             )
           )
-        )
 
   return list_to_form(and_list, And)
 
