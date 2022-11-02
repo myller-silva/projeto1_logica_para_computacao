@@ -2,6 +2,7 @@ import pandas as pd
 from my_functions.list_manipulation import list_to_form
 from LogiComp.formula import Atom, Implies, Not, Or, And
 
+LE, GT, S = 'le', 'gt', 's '
 
 
 
@@ -17,9 +18,9 @@ def formula_sem_parenteses(formula):
 def get_columns_names(dataframe=pd.DataFrame()):
   return dataframe.columns.to_list()
 
-#implementar 
-def len_pacientes(dataframe = pd.DataFrame()):
-  return 3
+
+def number_of_patients(dataframe = pd.DataFrame()):
+  return len(dataframe)
 
 
 def show_data_list(data_list=[[], []]):
@@ -30,46 +31,52 @@ def show_data_list(data_list=[[], []]):
 
 
 
-def restricao_um(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
-  #Para cada atributo e cada regra, temos exatamente uma das três possibilidades: 
-  # o atributo aparece
-  # com ≤ na regra, 
-  # o atributo aparece com > na regra, 
-  # ou o atributo não aparece na regra.
-
-  possible = ['le', 'gt', 's ']
-  len_possible = len(possible)
-  columns = get_columns_names(dataframe) 
-  len_columns = len(columns)
+def restricao_um(dataframe = pd.DataFrame(), m_regras=2): 
   and_list = []
-
-  for i in range(0, m_regras):
-    or_list = []
-    for a in range(0, len_columns-1):
-      for c in range(0, len_possible):
-        or_list.append(
-          And(
-            Atom(f'X{columns[a]},{i+1},{possible[ c % len_possible ]}'), 
-            Not(
-              Or(
-                Atom(f'X{columns[a]},{i+1},{possible[ (c+1) % len_possible ]}'), 
-                Atom(f'X{columns[a]},{i+1},{possible[ (c+2) % len_possible ]}')
+  atributos = get_atributos(dataframe)
+  for at in atributos:     
+    for i in range(0, m_regras):
+      x1 = Atom(f'X{at},{i+1},{LE}')
+      x2 = Atom(f'X{at},{i+1},{GT}')
+      x3 = Atom(f'X{at},{i+1},{S}') 
+      form = Or(
+              And(
+                Not(x1),
+                And(
+                  Not(x2),
+                  x3
+                )
+              ),
+              Or(    
+                And(
+                  Not(x2),
+                  And(
+                    Not(x3),
+                    x1
+                  )
+                ),    
+                And(
+                  Not(x3),
+                  And(
+                    Not(x1),
+                    x2
+                  )
+                )
               )
             )
-          ) 
-        ) 
-    and_list.append( list_to_form(or_list, Or) ) 
-  return list_to_form(and_list, And)
+
+
+    and_list.append( form )
+  return list_to_form(and_list, And) 
 
 
 
-
-def restricao_dois(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
+def restricao_dois(dataframe = pd.DataFrame(), m_regras=2): # ok
   # Cada regra deve ter algum atributo aparecendo nela.
   # AndZao(1 a m)
   # OrZao (1 a n) variando a coluna
   
-  possible = ['le', 'gt', 's ']
+  possible = [LE, GT, S]
   columns =  get_columns_names(dataframe)
   n = len(columns)-1
   and_list = []
@@ -83,15 +90,16 @@ def restricao_dois(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
 
 
 
-def restricao_tres(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
-  # Para cada paciente sem patologia e cada regra, algum atributo do paciente n˜ao pode ser aplicado à regra.
+def restricao_tres(dataframe = pd.DataFrame(), m_regras=2):
   data_array = dataframe.values.tolist()
   columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
   and_list = []
-  possible = ['le', 'gt', 's ']
+  possible = [LE, GT, S]
 
   n = len(data_array)
+  n2 = number_of_patients(dataframe) 
+  
   
   for j in range(0, n):
     if(data_array[j][-1]==0):
@@ -113,20 +121,21 @@ def get_atributos(dataframe = pd.DataFrame()):
 
 
 
-#ok
-def restricao_quatro(dataframe = pd.DataFrame(), n=3, m_regras=4):
 
-  and_list = []
-  # columns_names = get_columns_names(dataframe)
-  # atributos = columns_names[0:-1]
+
+def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
+  and_list = [] 
   atributos = get_atributos(dataframe)
+  
+  data_array = dataframe.values.tolist()
+  n = len(data_array)
 
   for i in range(m_regras):
     for j in range(n):
       for a in atributos:
         and_list.append(
           Implies(
-            Atom(f'X{a},{i+1},{"le"}'),
+            Atom(f'X{a},{i+1},{LE}'),
             Not(
               Atom(f'C{i+1},{j+1}')
             )
@@ -137,13 +146,12 @@ def restricao_quatro(dataframe = pd.DataFrame(), n=3, m_regras=4):
 
 
 #ok
-def restricao_cinco(dataframe = pd.DataFrame(), n=3, m_regras=4): # ok
-  # AndZao(1 a n ) OrZao(1 a m) C(i,j)
-  # Cada paciente com patologia deve ser coberto por alguma das regras.
-  # m é o numero de regras que estamos verificando se é possivel obter para classificar corretamente todos os pacientes
-  # n é o numero de pacientes
-
+def restricao_cinco(dataframe = pd.DataFrame(), m_regras=2): 
   and_list = []
+  
+  data_array = dataframe.values.tolist()
+  n = len(data_array)
+
   for j in range(n):
     or_list = []
     for i in range(m_regras):
