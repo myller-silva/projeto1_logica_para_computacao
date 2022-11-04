@@ -1,7 +1,7 @@
 import pandas as pd 
 from my_functions.list_manipulation import list_to_form
 from LogiComp.formula import Atom, Implies, Not, Or, And
-
+from LogiComp.semantics import satisfiability_brute_force
 LE, GT, S = 'le', 'gt', 's '
 
 
@@ -67,7 +67,9 @@ def restricao_um(dataframe = pd.DataFrame(), m_regras=2):
 
 
     and_list.append( form )
-  return list_to_form(and_list, And) 
+  and_form = list_to_form(and_list, And) 
+  # print(type(and_form))
+  return and_form 
 
 
 #ok
@@ -95,15 +97,25 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=2):
 
   n = number_of_patients(dataframe)   
 
+  # for j in range(0, n):
+  #   if(data_array[j][-1]==0):
+  #     for i in range(0, m_regras):
+  #       and_list.append(Not(Atom(f'C{i+1},{j+1}')))
+
   for j in range(0, n):
     if(data_array[j][-1]==0):
       for i in range(0, m_regras):
         or_list = []
         for a in range(0, n_atributos):
-          if(data_array[j][a]==1):
-            or_list.append( Atom( f'X{columns[a]},{i+1},{GT}') )
-          elif(data_array[j][a]==0):
-            or_list.append( Atom( f'X{columns[a]},{i+1},{LE}') )
+          
+          if(data_array[j][a] == 0):
+            or_list.append( (
+              Atom(f'X{columns[a]},{i+1},{LE}')
+            ))
+          else:
+            or_list.append( (
+              Atom(f'X{columns[a]},{i+1},{GT}')
+            ))
         and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
 
@@ -146,15 +158,33 @@ def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
 
 #ok
 def restricao_cinco(dataframe = pd.DataFrame(), m_regras=2): 
+  n = len(dataframe)
+  data_array = list(dataframe.values)
   and_list = []
-  
-  data_array = dataframe.values.tolist()
-  n = len(data_array)
+  for j in range(0, n):
+    if(data_array[j][-1]==1):
+      or_list = []
+      for i in range(0, m_regras):
+        or_list.append((Atom(f'C{i+1},{j+1}')))
+      and_list.append(list_to_form(or_list, Or))
+    elif(data_array[j][-1]==0):
+      for i in range(0, m_regras):
+        and_list.append(Not(Atom(f'C{i+1},{j+1}')))
+  return list_to_form(and_list, And)
 
-  for j in range(n):
+
+
+#cada regra deve cobrir pelo menos um paciente 
+def restricao_seis(df, m):
+  n = len(list(df.values))
+  and_list = []
+  for i in range(0, m):
     or_list = []
-    for i in range(m_regras):
+    for j in range(0, n):
       or_list.append(Atom(f'C{i+1},{j+1}'))
-    and_list.append(list_to_form(or_list, Or)) 
-  return list_to_form( and_list, And )
+    and_list.append(list_to_form(or_list, Or))
+  return list_to_form(and_list, And)
+        
   
+
+
