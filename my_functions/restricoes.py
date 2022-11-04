@@ -127,32 +127,33 @@ def get_atributos(dataframe = pd.DataFrame()):
 
 
 
-
-# erro corrigido
-# erro
 def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
   and_list = [] 
   atributos = get_atributos(dataframe)
-  
   data_array = dataframe.values.tolist()
-  n = len(data_array)
-  # print(dataframe)
-  # print(data_array)
+  n = len(data_array) 
 
-  for i in range(m_regras):
-    for j in range(n):
+  for i in range(0, m_regras):
+    for j in range(0, n):
       tem_patologia = data_array[j][-1] == 1 
       if(tem_patologia):
-        for a in atributos:
-          and_list.append(
-            Implies(
-              Atom(f'X{a},{i+1},{LE}'),
-              Not(
-                Atom(f'C{i+1},{j+1}')
+        for a in range(0, len(data_array[j])-1):
+          or_list = []
+          if(data_array[j][a] == 0): 
+            or_list.append(
+              Implies(
+                Atom( f'X{atributos[a]},{i+1},{LE}' ),
+                Not(Atom( f'C{i+1},{j+1}' ))
               )
             )
-          )
-
+          else:
+            or_list.append(
+              Implies(
+                Atom( f'X{atributos[a]},{i+1},{GT}' ),
+                Not(Atom( f'C{i+1},{j+1}' ))
+              )
+            )
+          and_list.append(list_to_form(or_list, Or)) 
   return list_to_form(and_list, And)
 
 
