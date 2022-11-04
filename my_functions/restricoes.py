@@ -63,12 +63,10 @@ def restricao_um(dataframe = pd.DataFrame(), m_regras=2):
                   )
                 )
               )
-            )
-
+            ) 
 
     and_list.append( form )
-  and_form = list_to_form(and_list, And) 
-  # print(type(and_form))
+  and_form = list_to_form(and_list, And)  
   return and_form 
 
 
@@ -183,7 +181,7 @@ def restricao_seis(df, m):
 
 
   
-def solver(file_csv = './file.csv', m_regras=1, inter={} ):
+def solver( file_csv = './file.csv', m_regras=1 ):
   dataframe = pd.read_csv(file_csv)
   arr = [
     restricao_um(dataframe, m_regras),
@@ -196,25 +194,17 @@ def solver(file_csv = './file.csv', m_regras=1, inter={} ):
   formula = list_to_form(arr, And) 
   interpretation = satisfiability_brute_force(formula)  
   atributos = get_atributos(dataframe)
-  set_rules = []
-  
-  if(interpretation!=False): 
-    for atom in interpretation:
-      inter[atom] = interpretation[atom]
+  set_rules = [] 
+  if(interpretation!=False):  
     for i in range(0, m_regras):
       rules = [] 
-      for a in atributos: 
-        # temp = (f'X{a},{i+1},{S}')
-        # if((temp in interpretation) and (interpretation[temp] == True) ):
-        #   continue
-        
+      for a in atributos:  
         temp = (f'X{a},{i+1},{LE}')
         if((temp in interpretation) and (interpretation[temp] == True) ):
             rules.append(f'{a}') 
         temp = (f'X{a},{i+1},{GT}')
         if((temp in interpretation) and (interpretation[temp] == True) ):
-            rules.append(f'{a}'.replace("<=", ">"))
-      # if(len(rules)!=0):
+            rules.append(f'{a}'.replace("<=", ">")) 
       set_rules.append(rules)
   else:
     return "insatisfativel"
