@@ -94,21 +94,13 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=2):
   columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
   and_list = [] 
-
   n = number_of_patients(dataframe)   
-
-  # for j in range(0, n):
-  #   if(data_array[j][-1]==0):
-  #     for i in range(0, m_regras):
-  #       and_list.append(Not(Atom(f'C{i+1},{j+1}')))
-
   for j in range(0, n):
     if(data_array[j][-1]==0):
       for i in range(0, m_regras):
         or_list = []
         for a in range(0, n_atributos):
-          
-          if(data_array[j][a] == 0):
+          if(data_array[j][a] != 1):
             or_list.append( (
               Atom(f'X{columns[a]},{i+1},{LE}')
             ))
@@ -126,7 +118,7 @@ def get_atributos(dataframe = pd.DataFrame()):
   return columns_names[0:-1]
 
 
-
+#ok
 def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
   and_list = [] 
   atributos = get_atributos(dataframe)
@@ -168,7 +160,7 @@ def restricao_cinco(dataframe = pd.DataFrame(), m_regras=2):
       for i in range(0, m_regras):
         or_list.append((Atom(f'C{i+1},{j+1}')))
       and_list.append(list_to_form(or_list, Or))
-    elif(data_array[j][-1]==0):
+    else:
       for i in range(0, m_regras):
         and_list.append(Not(Atom(f'C{i+1},{j+1}')))
   return list_to_form(and_list, And)
@@ -212,6 +204,10 @@ def solver(file_csv = './file.csv', m_regras=1, inter={} ):
     for i in range(0, m_regras):
       rules = [] 
       for a in atributos: 
+        # temp = (f'X{a},{i+1},{S}')
+        # if((temp in interpretation) and (interpretation[temp] == True) ):
+        #   continue
+        
         temp = (f'X{a},{i+1},{LE}')
         if((temp in interpretation) and (interpretation[temp] == True) ):
             rules.append(f'{a}') 
