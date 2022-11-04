@@ -188,3 +188,38 @@ def restricao_seis(df, m):
   
 
 
+
+  
+def solver(file_csv = './file.csv', m_regras=1, inter={} ):
+  dataframe = pd.read_csv(file_csv)
+  arr = [
+    restricao_um(dataframe, m_regras),
+    restricao_dois(dataframe, m_regras),
+    restricao_tres(dataframe, m_regras), 
+    restricao_quatro(dataframe, m_regras),
+    restricao_cinco(dataframe, m_regras) ,
+    restricao_seis(dataframe, m_regras)
+  ]
+  formula = list_to_form(arr, And) 
+  interpretation = satisfiability_brute_force(formula)  
+  atributos = get_atributos(dataframe)
+  set_rules = []
+  
+  if(interpretation!=False): 
+    for atom in interpretation:
+      inter[atom] = interpretation[atom]
+    for i in range(0, m_regras):
+      rules = [] 
+      for a in atributos: 
+        temp = (f'X{a},{i+1},{LE}')
+        if((temp in interpretation) and (interpretation[temp] == True) ):
+            rules.append(f'{a}') 
+        temp = (f'X{a},{i+1},{GT}')
+        if((temp in interpretation) and (interpretation[temp] == True) ):
+            rules.append(f'{a}'.replace("<=", ">"))
+      # if(len(rules)!=0):
+      set_rules.append(rules)
+  else:
+    return "insatisfativel"
+    
+  return set_rules
