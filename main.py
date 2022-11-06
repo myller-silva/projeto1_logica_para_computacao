@@ -7,14 +7,17 @@ from LogiComp.semantics import *
 
 
 
-
-file = 'exemplo_dado_no_pdf.csv'
-
+file = './pacientes_testes/column_bin_2a_3p.csv'
 df = pd.read_csv(f'./{file}')
+m_regras = 2
 
 print(df)
-m_regras = 2
-s = solver(file, m_regras)
 
-for rule in s:
-  print(rule)
+s = solver(df, m_regras)
+if(len(s)!=0):
+  print("conjunto de regras: ")
+  for rule in s:
+    print(rule)
+else:
+  print(f'Nao é possivel definir um conjunto de regras com {m_regras} regra(s)   ')
+
