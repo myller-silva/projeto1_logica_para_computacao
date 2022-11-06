@@ -19,5 +19,5 @@ if(len(s)!=0):
   for rule in s:
     print(rule)
 else:
-  print(f'Nao é possivel definir um conjunto de regras com {m_regras} regra(s)   ')
+  print(f'Nao é possivel definir um conjunto de regras com {m_regras} regra(s)')
 
