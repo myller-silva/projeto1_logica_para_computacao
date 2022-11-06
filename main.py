@@ -8,14 +8,13 @@ from LogiComp.semantics import *
 
 
 
-file = 'arquivo_dos_pacientes/column_bin_3a_3p.csv'
+file = 'exemplo_dado_no_pdf.csv'
 
 df = pd.read_csv(f'./{file}')
 
-m_regras = 2
-
 print(df)
+m_regras = 2
+s = solver(file, m_regras)
 
-r = solver(file, m_regras)
-
-print(r)
+for rule in s:
+  print(rule)

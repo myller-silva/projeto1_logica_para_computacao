@@ -9,7 +9,7 @@ As another example, the piece of code below creates an object that represents (p
 formula2 = Implies(Atom('p'), Or(Atom('p'), Atom('s')))
 """
 
-simbolo = {
+symbol = {
     'not': u"\u00ac",
     'and': u"\u2227",
     'or': u"\u2228",
@@ -65,9 +65,9 @@ class Not(Formula):
 
     def __str__(self):
         if( isinstance(self.inner, Atom) ):
-            return simbolo["not"] + self.inner.__str__()
+            return symbol["not"] + self.inner.__str__()
         else:
-            return  simbolo["not"] +"(" + self.inner.__str__() + ")"
+            return  symbol["not"] +"(" + self.inner.__str__() + ")"
     
     def __eq__(self, other):
         return isinstance(other, Not) and other.inner == self.inner
@@ -88,7 +88,7 @@ class And(Formula):
     #     temp =  "\n" if(quebrar_linha==True) else ""
     #     return f'{temp}{self.left.str_line(True)} {simbolo["and"]} {self.right.str_line(True)} {temp}'
     def __str__(self):
-        return f'({self.left.__str__() } {simbolo["and"]} {self.right.__str__()})'
+        return f'({self.left.__str__() } {symbol["and"]} {self.right.__str__()})'
 
     def __str__(self):
 
@@ -100,7 +100,7 @@ class And(Formula):
         if((isinstance(self.right, Or)) or (isinstance(self.right, Implies) )  ):
         # # if((not isinstance(self.right, And)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
             r = f'({r})' 
-        return f'{l} {simbolo["and"]} {r}'
+        return f'{l} {symbol["and"]} {r}'
 
 
     def __eq__(self, other):
@@ -129,7 +129,7 @@ class Or(Formula):
         if((isinstance(self.right, And)) or (isinstance(self.right, Implies) )  ):
         # if((not isinstance(self.right, Or)) and (not isinstance(self.right, Atom) ) and (not isinstance(self.right, Not) ) ):
             r = f'({r})'
-        return f'{l} {simbolo["or"]} {r}' 
+        return f'{l} {symbol["or"]} {r}' 
 
     def __eq__(self, other):
         return isinstance(other, Or) and other.left == self.left and other.right == self.right
