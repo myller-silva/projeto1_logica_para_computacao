@@ -10,4 +10,5 @@ LogiComp/__pycache__/formula.cpython-38.pyc
 temp.py
 testando.py
 teste.py
-main.ipynb
+
+*.ipynb

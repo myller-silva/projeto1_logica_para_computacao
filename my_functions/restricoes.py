@@ -29,28 +29,10 @@ def restricao_um(dataframe = pd.DataFrame(), m_regras=1):
       x1 = Atom(f'X{attribute},{i+1},{LE}')
       x2 = Atom(f'X{attribute},{i+1},{GT}')
       x3 = Atom(f'X{attribute},{i+1},{S}')  
-      a = And(
-        x1,
-        And(
-          Not(x2),
-          Not(x3)
-        )
-      )
-      b = And(
-        Not(x1),
-        And(
-          x2,
-          Not(x3)
-        )
-      )
-      c = And(
-        Not(x1),
-        And(
-          Not(x2),
-          x3
-        )
-      ) 
-      and_list.append( Or( a,Or(b,c) ) ) 
+      a = list_to_form( [   x1, Not(x2), Not(x3)], And )
+      b = list_to_form( [Not(x1),    x2, Not(x3)], And )
+      c = list_to_form( [Not(x1), Not(x2),    x3], And )
+      and_list.append( list_to_form( [a, b, c], Or ) ) 
   and_form = list_to_form(and_list, And)  
   return and_form 
 
@@ -80,16 +62,13 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=1):
     if(sem_patologia):
       for i in range(0, m_regras):
         or_list = []
-        for a in range(0, n_atributos):
-          if(data_array[j][a] != 1):
-            or_list.append( (
-              Atom(f'X{columns[a]},{i+1},{LE}')
-            ))
-          else:
-            or_list.append( (
-              Atom(f'X{columns[a]},{i+1},{GT}')
-            ))
-        and_list.append( list_to_form(or_list, Or) )
+        for a in range(0, n_atributos): 
+          le_or_gt = LE if(data_array[j][a] != 1) else GT
+          or_list.append( (
+            Atom(f'X{columns[a]},{i+1},{le_or_gt}')
+          )) 
+        if(len(or_list)!=0):
+          and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
 
 
@@ -126,7 +105,8 @@ def restricao_cinco(dataframe = pd.DataFrame(), m_regras=1):
       or_list = []
       for i in range(0, m_regras):
         or_list.append((Atom(f'C{i+1},{j+1}')))
-      and_list.append(list_to_form(or_list, Or)) 
+      if(len(or_list)!=0):
+        and_list.append(list_to_form(or_list, Or)) 
   return list_to_form(and_list, And)
 
 
