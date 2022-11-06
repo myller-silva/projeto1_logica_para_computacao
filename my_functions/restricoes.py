@@ -5,16 +5,6 @@ from LogiComp.semantics import satisfiability_brute_force
 LE, GT, S = 'le', 'gt', 's '
 
 
-
-def formula_sem_parenteses(formula):
-  s = str(formula)
-  new_s ='' 
-  for c in s:
-    if(c not in ['(', ')']):
-      new_s += c 
-  return new_s
-
-
 def get_columns_names(dataframe=pd.DataFrame()):
   return dataframe.columns.to_list()
 
@@ -23,22 +13,22 @@ def number_of_patients(dataframe = pd.DataFrame()):
   return len(dataframe)
 
 
-def show_data_list(data_list=[[], []]):
-  for l in data_list:
-    for c in l:
-      print(c, end=' ')
-    print()
+def get_attributes(dataframe = pd.DataFrame()):
+  columns_names = get_columns_names(dataframe) 
+  return columns_names[0:-1]
 
+def dataframe_data_to_list(dataframe = pd.DataFrame()):
+  return dataframe.values.tolist()
 
 # ok
-def restricao_um(dataframe = pd.DataFrame(), m_regras=2): 
+def restricao_um(dataframe = pd.DataFrame(), m_regras=1): 
   and_list = []
-  atributos = get_atributos(dataframe)
-  for at in atributos:     
+  attributes = get_attributes(dataframe)
+  for attribute in attributes:     
     for i in range(0, m_regras):
-      x1 = Atom(f'X{at},{i+1},{LE}')
-      x2 = Atom(f'X{at},{i+1},{GT}')
-      x3 = Atom(f'X{at},{i+1},{S}')  
+      x1 = Atom(f'X{attribute},{i+1},{LE}')
+      x2 = Atom(f'X{attribute},{i+1},{GT}')
+      x3 = Atom(f'X{attribute},{i+1},{S}')  
       a = And(
         x1,
         And(
@@ -66,7 +56,7 @@ def restricao_um(dataframe = pd.DataFrame(), m_regras=2):
 
 
 #ok
-def restricao_dois(dataframe = pd.DataFrame(), m_regras=2):
+def restricao_dois(dataframe = pd.DataFrame(), m_regras=1):
   columns =  get_columns_names(dataframe)
   n = len(columns)-1
   and_list = []
@@ -79,8 +69,8 @@ def restricao_dois(dataframe = pd.DataFrame(), m_regras=2):
 
 
 #ok
-def restricao_tres(dataframe = pd.DataFrame(), m_regras=2):
-  data_array = dataframe.values.tolist()
+def restricao_tres(dataframe = pd.DataFrame(), m_regras=1):
+  data_array = dataframe_data_to_list(dataframe)
   columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
   and_list = [] 
@@ -102,15 +92,11 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=2):
         and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
 
-def get_atributos(dataframe = pd.DataFrame()):
-  columns_names = get_columns_names(dataframe) 
-  return columns_names[0:-1]
-
 
 #ok
-def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
+def restricao_quatro(dataframe = pd.DataFrame(), m_regras=1):
   and_list = [] 
-  atributos = get_atributos(dataframe)
+  attributes = get_attributes(dataframe)
   data_array = dataframe.values.tolist()
   n = len(data_array) 
 
@@ -118,53 +104,55 @@ def restricao_quatro(dataframe = pd.DataFrame(), m_regras=2):
     for j in range(0, n):
       tem_patologia = data_array[j][-1] == 1 
       if(tem_patologia):
-        for a in range(0, len(data_array[j])-1):
-          or_list = []
-          if(data_array[j][a] == 0): 
-            or_list.append(
-              Implies(
-                Atom( f'X{atributos[a]},{i+1},{LE}' ),
-                Not(Atom( f'C{i+1},{j+1}' ))
-              )
+        for a in range(0, len(data_array[j])-1): 
+          le_or_gt = LE if(data_array[j][a] == 0) else GT
+          and_list.append(
+            Implies(
+              Atom( f'X{attributes[a]},{i+1},{le_or_gt}' ),
+              Not(Atom( f'C{i+1},{j+1}' ))
             )
-          else:
-            or_list.append(
-              Implies(
-                Atom( f'X{atributos[a]},{i+1},{GT}' ),
-                Not(Atom( f'C{i+1},{j+1}' ))
-              )
-            )
-          and_list.append(list_to_form(or_list, Or)) 
+          ) 
   return list_to_form(and_list, And)
 
 
 #ok
-def restricao_cinco(dataframe = pd.DataFrame(), m_regras=2): 
+def restricao_cinco(dataframe = pd.DataFrame(), m_regras=1): 
   n = len(dataframe)
-  data_array = list(dataframe.values)
+  data_array = dataframe_data_to_list(dataframe)
   and_list = []
   for j in range(0, n):
-    if(data_array[j][-1]==1):
+    tem_patologia = data_array[j][-1]==1
+    if(tem_patologia):
       or_list = []
       for i in range(0, m_regras):
         or_list.append((Atom(f'C{i+1},{j+1}')))
-      and_list.append(list_to_form(or_list, Or))
-    # else:
-    #   for i in range(0, m_regras):
-    #     and_list.append(Not(Atom(f'C{i+1},{j+1}')))
+      and_list.append(list_to_form(or_list, Or)) 
   return list_to_form(and_list, And)
 
 
+# cada regra deve cobrir pelo menos um paciente com patologia
+def restricao_seis(dataframe = pd.DataFrame(), m_regras = 1):
+  data_array = dataframe_data_to_list(dataframe)
+  and_list = []
+  n = len(data_array)
+  for i in range(0, m_regras):
+    or_list = []
+    for j in range(0, n): 
+      tem_patologia = data_array[j][-1] == 1 
+      if(tem_patologia): 
+        or_list.append(Atom(f'C{i+1},{j+1}')) 
+    if(len(or_list) != 0):
+      and_list.append(list_to_form(or_list, Or)) 
+  return list_to_form(and_list, And)
 
-  
 
-def rule_set_generator(dataframe, interpretation, m_regras):
+def rule_set_generator(dataframe = pd.DataFrame() , interpretation={}, m_regras=1):
   set_of_rules = []
-  atributos = get_atributos(dataframe)
+  attributes = get_attributes(dataframe)
   if(interpretation!=False):  
     for i in range(0, m_regras):
       rules = [] 
-      for a in atributos:  
+      for a in attributes:  
         temp = f'X{a},{i+1},{LE}'
         if((temp in interpretation) and (interpretation[temp] == True) ):
             rules.append(f'{a}') 
@@ -172,22 +160,18 @@ def rule_set_generator(dataframe, interpretation, m_regras):
         if((temp in interpretation) and (interpretation[temp] == True) ):
             rules.append(f'{a}'.replace("<=", ">")) 
       set_of_rules.append(rules)
-  else:
-    return [f"Nao é possivel definir um conjunto de regras com {m_regras} regra(s)"]
-  
   return set_of_rules
 
 
-
   
-def solver( file_csv = './file.csv', m_regras=1 ):
-  dataframe = pd.read_csv(file_csv)
+def solver( dataframe=pd.DataFrame(), m_regras=1 ): 
   arr = [
     restricao_um(dataframe, m_regras),
     restricao_dois(dataframe, m_regras),
     restricao_tres(dataframe, m_regras), 
     restricao_quatro(dataframe, m_regras),
     restricao_cinco(dataframe, m_regras), 
+    restricao_seis(dataframe, m_regras)
   ] 
   interpretation = satisfiability_brute_force( list_to_form(arr, And) )   
   set_of_rules = rule_set_generator(dataframe, interpretation, m_regras)     
