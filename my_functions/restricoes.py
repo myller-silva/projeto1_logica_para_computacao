@@ -64,9 +64,7 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=1):
         or_list = []
         for a in range(0, n_atributos): 
           le_or_gt = LE if(data_array[j][a] != 1) else GT
-          or_list.append( (
-            Atom(f'X{columns[a]},{i+1},{le_or_gt}')
-          )) 
+          or_list.append( Atom(f'X{columns[a]},{i+1},{le_or_gt}') ) 
         if(len(or_list)!=0):
           and_list.append( list_to_form(or_list, Or) )
   return list_to_form(and_list, And)
@@ -76,7 +74,7 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=1):
 def restricao_quatro(dataframe = pd.DataFrame(), m_regras=1):
   and_list = [] 
   attributes = get_attributes(dataframe)
-  data_array = dataframe.values.tolist()
+  data_array = dataframe_data_to_list(dataframe)
   n = len(data_array) 
 
   for i in range(0, m_regras):
@@ -88,7 +86,7 @@ def restricao_quatro(dataframe = pd.DataFrame(), m_regras=1):
           and_list.append(
             Implies(
               Atom( f'X{attributes[a]},{i+1},{le_or_gt}' ),
-              Not(Atom( f'C{i+1},{j+1}' ))
+              Not( Atom( f'C{i+1},{j+1}' ) )
             )
           ) 
   return list_to_form(and_list, And)
@@ -151,8 +149,11 @@ def solver( dataframe=pd.DataFrame(), m_regras=1 ):
     restricao_tres(dataframe, m_regras), 
     restricao_quatro(dataframe, m_regras),
     restricao_cinco(dataframe, m_regras), 
-    restricao_seis(dataframe, m_regras)
+    # restricao_seis(dataframe, m_regras)
   ] 
   interpretation = satisfiability_brute_force( list_to_form(arr, And) )   
   set_of_rules = rule_set_generator(dataframe, interpretation, m_regras)     
   return set_of_rules
+
+
+
