@@ -109,19 +109,19 @@ def restricao_cinco(dataframe = pd.DataFrame(), m_regras=1):
 
 
 # cada regra deve cobrir pelo menos um paciente com patologia
-def restricao_seis(dataframe = pd.DataFrame(), m_regras = 1):
-  data_array = dataframe_data_to_list(dataframe)
-  and_list = []
-  n = len(data_array)
-  for i in range(0, m_regras):
-    or_list = []
-    for j in range(0, n): 
-      tem_patologia = data_array[j][-1] == 1 
-      if(tem_patologia): 
-        or_list.append(Atom(f'C{i+1},{j+1}')) 
-    if(len(or_list) != 0):
-      and_list.append(list_to_form(or_list, Or)) 
-  return list_to_form(and_list, And)
+# def restricao_seis(dataframe = pd.DataFrame(), m_regras = 1):
+#   data_array = dataframe_data_to_list(dataframe)
+#   and_list = []
+#   n = len(data_array)
+#   for i in range(0, m_regras):
+#     or_list = []
+#     for j in range(0, n): 
+#       tem_patologia = data_array[j][-1] == 1 
+#       if(tem_patologia): 
+#         or_list.append(Atom(f'C{i+1},{j+1}')) 
+#     if(len(or_list) != 0):
+#       and_list.append(list_to_form(or_list, Or)) 
+#   return list_to_form(and_list, And)
 
 
 def rule_set_generator(dataframe = pd.DataFrame() , interpretation={}, m_regras=1):
