@@ -15,7 +15,7 @@ def truth_value(formula=Atom('atom'), interpretation=dict()):
         try:
             return interpretation[formula.name] 
         except: 
-            raise KeyError(f"Atomica {formula.name} nao encontrada na interpretacao {interpretation}")
+            raise KeyError(f"Atomica {formula.name} não encontrada na interpretacao {interpretation}")
     if(isinstance(formula, Not)):
         return (not truth_value(formula.inner, interpretation ))
     if(isinstance(formula, And)):
@@ -36,7 +36,7 @@ def truth_value(formula=Atom('atom'), interpretation=dict()):
             or
             truth_value(formula.right, interpretation)
         )  
-    raise TypeError('Formula ou interpretacao invalida')
+    raise TypeError(f'Formula {formula} ou interpretacao {interpretation} invalida')
 
 
 
