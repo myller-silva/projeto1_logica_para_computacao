@@ -10,7 +10,7 @@ from LogiComp.semantics import *
 # file = './pacientes_testes/exemplo_dado_no_pdf.csv'
 file = './arquivo_dos_pacientes/column_bin_3a_3p.csv'
 df = pd.read_csv(f'./{file}')
-m_regras = 2
+m_regras = 1
 
 print(df)
 
