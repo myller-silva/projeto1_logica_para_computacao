@@ -17,7 +17,7 @@ def get_attributes(dataframe = pd.DataFrame()):
   columns_names = get_columns_names(dataframe) 
   return columns_names[0:-1]
 
-def dataframe_data_to_list(dataframe = pd.DataFrame()):
+def dataframe_to_list(dataframe = pd.DataFrame()):
   return dataframe.values.tolist()
 
 # ok
@@ -52,7 +52,7 @@ def restricao_dois(dataframe = pd.DataFrame(), m_regras=1):
 
 #ok
 def restricao_tres(dataframe = pd.DataFrame(), m_regras=1):
-  data_array = dataframe_data_to_list(dataframe)
+  data_array = dataframe_to_list(dataframe)
   columns =  get_columns_names(dataframe)
   n_atributos = len(columns)-1
   and_list = [] 
@@ -74,7 +74,7 @@ def restricao_tres(dataframe = pd.DataFrame(), m_regras=1):
 def restricao_quatro(dataframe = pd.DataFrame(), m_regras=1):
   and_list = [] 
   attributes = get_attributes(dataframe)
-  data_array = dataframe_data_to_list(dataframe)
+  data_array = dataframe_to_list(dataframe)
   n = len(data_array) 
 
   for i in range(0, m_regras):
@@ -95,7 +95,7 @@ def restricao_quatro(dataframe = pd.DataFrame(), m_regras=1):
 #ok
 def restricao_cinco(dataframe = pd.DataFrame(), m_regras=1): 
   n = len(dataframe)
-  data_array = dataframe_data_to_list(dataframe)
+  data_array = dataframe_to_list(dataframe)
   and_list = []
   for j in range(0, n):
     tem_patologia = data_array[j][-1]==1
